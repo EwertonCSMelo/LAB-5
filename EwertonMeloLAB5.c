@@ -21,10 +21,11 @@ void removerContato(AGENDA *c, int nc);
 void listarDados(AGENDA *c);
 void listarContGrupo(AGENDA *c, int nc);
 void listarTodosContatos(AGENDA *c, int nc);
-void lerNome(AGENDA *c, int nc);
-void lerTelefone(AGENDA *c, int nc);
-void lerGrupo(AGENDA *c, int nc);
+void lerNome(AGENDA *c);
+void lerTelefone(AGENDA *c);
+void lerGrupo(AGENDA *c);
 char nomeGrupo(int ng);
+char printDados(AGENDA *c);
 
 main()
 {
@@ -70,11 +71,11 @@ main()
 void criaContato(AGENDA *c, int nc) //c-> contato nc -> numero de contatos
 {
 
-    lerNome(c, nc);     // Ler nome do contato
+    lerNome(&c[nc]);     // Ler nome do contato
 
-    lerTelefone(c, nc); //Armazena o numero do telefone do contato
+    lerTelefone(&c[nc]); //Armazena o numero do telefone do contato
 
-    lerGrupo(c, nc);    //Armazena o grupo pertencente o contato
+    lerGrupo(&c[nc]);    //Armazena o grupo pertencente o contato
 
  }
 
@@ -117,9 +118,9 @@ void alteraContato(AGENDA *c, int nc)
 
              switch(opcao)
               {
-                case 1: lerNome(c,nc); break;
-                case 2: lerTelefone(c, nc); break;
-                case 3: lerGrupo(c, nc); break;
+                case 1: lerNome(c); break;
+                case 2: lerTelefone(c); break;
+                case 3: lerGrupo(c); break;
                 default: printf("\t\tOpcao Invalida\n");
                         system("pause");
               }
@@ -133,7 +134,7 @@ void removerContato(AGENDA *c, int nc)
 
 }
 
-void listarDados(AGENDA *c)
+void listarDados(AGENDA *c) // Opcao 4
 {
     char pessoa[tamNome];
     int i;
@@ -155,12 +156,13 @@ void listarDados(AGENDA *c)
         }
 
      system("cls");
+
     if (strcmp(pessoa, c[i].contato)==0)
     {
-     printf("Nome: %s Telefone: %s Grupo: %s \n", c[i].contato, c[i].telefone, nomeGrupo(c[i].grupo));
+     printDados(&c[i].contato);
      system ("pause");
     }
-    if(strcmp(pessoa, c[i].contato)!=0)
+    if(strcmp(pessoa, &c[i].contato)!=0)
     {
       printf("Contato nao localizado");
       system ("pause");
@@ -179,7 +181,6 @@ void listarTodosContatos(AGENDA *c, int nc)
      for (i=0;i<nc;i++)
          {
 
-          printf("Nome: %s Telefone: %s Grupo: %s \n", c[i].contato, c[i].telefone,nomeGrupo(c[i].grupo));
 
          }
           printf("\n");
@@ -192,25 +193,26 @@ void mostraQuantContatos( int nc)
      system("pause");
 }
 
-void lerNome(AGENDA *c, int nc)
+void lerNome(AGENDA *c)
 {
     system("cls");
     printf("Nome:");  // Lendo nome do contato
     setbuf(stdin, NULL); // Limpar a stream antes de pegar os dados.
-    fgets(c[nc].contato, tamNome, stdin);
-    strtok(c[nc].contato, "\n");//limpando o '\n'
+    fgets(&c->contato, tamNome, stdin);
+    strtok(&c->contato, "\n");//limpando o '\n'
 
 }
 
-void lerTelefone(AGENDA *c, int nc)
+void lerTelefone(AGENDA *c)
 {
     system("cls");
     printf("Telefone:");
     setbuf(stdin, NULL); // Limpar a stream antes de pegar os dados.
-    fgets(c[nc].telefone, tamNumero, stdin);
-    strtok(c[nc].telefone, "\n");//limpando o '\n'
+    fgets(&c->telefone, tamNumero, stdin);
+    strtok(&c->telefone, "\n");//limpando o '\n'
+    system("pause");
 }
-void lerGrupo(AGENDA *c, int nc)
+void lerGrupo(AGENDA *c)
 {
     system("cls");
     printf("Grupo:");
@@ -221,7 +223,7 @@ void lerGrupo(AGENDA *c, int nc)
     printf("\t\t (5) colegas\n");
     printf("\t\t (6) outros\n\n");
     printf("\t\t Opcao: ");
-    scanf("%d",&c[nc].grupo);
+    scanf("%d",&c->grupo);
 }
 
 char nomeGrupo(int ng)
@@ -237,5 +239,11 @@ char nomeGrupo(int ng)
               default: printf("\t\tOpcao Invalida\n");
           }
 }
+
+char printDados(AGENDA *c)
+{
+   printf("Nome: %s Telefone: %s Grupo: %s \n", c->contato, c->telefone, nomeGrupo(c->grupo));
+
+ }
 
 
