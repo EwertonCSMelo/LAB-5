@@ -6,8 +6,6 @@
 #define tamGrupo 8
 #define numContatos 50
 enum grupos{familia=1, amigos, trabalho, estudos, colegas, outros};
-
-
 typedef struct{
         char contato[tamNome];
         char telefone[tamNumero];
@@ -55,7 +53,7 @@ main()
               {
                 case 1: criaContato(nomes,cont++);break;
                 case 2: alteraContato(nomes,cont);break;
-                case 3: removerContato(nomes,cont);break;
+                case 3: removerContato(nomes,cont--);break;
                 case 4: listarDados(nomes,cont);break;
                 case 5: listarContGrupo(nomes,cont);break;
                 case 6: listarTodosContatos(nomes,cont);break;
@@ -134,7 +132,7 @@ void alteraContato(AGENDA *c, int nc)
 void removerContato(AGENDA *c, int nc)
 {
     char pessoa[tamNome],fone[tamNumero];
-    int i,achou;
+    int i,pos,achou;
 
     system("cls");
     printf("Nome:");
@@ -148,6 +146,7 @@ void removerContato(AGENDA *c, int nc)
           if (achou==0)
              {
               achou=1;
+              pos=i;
               break;
              }
         }
@@ -160,16 +159,14 @@ void removerContato(AGENDA *c, int nc)
 
      if (achou == 1)
         {
-          nc=nc-1;
-          for (i=0;i<nc;i++)
+          for (i=pos;i<nc-1;i++)
               {
                strcpy(c[i].contato, c[i+1].contato);
                strcpy(c[i].telefone, c[i+1].telefone);
                c[i].grupo=c[i+1].grupo;
               }
         }
-
-}
+ }
 
 void listarDados(AGENDA *c,int nc) // Opcao 4
 {
@@ -217,19 +214,18 @@ void listarContGrupo(AGENDA *c, int nc)
  printf("\t\t (4) estudos\n");
  printf("\t\t (5) colegas\n");
  printf("\t\t (6) outros\n\n");
- printf("Digite o grupo a ser listado:");
- scanf("%d",ngrupo);
-
+ printf("Digite o grupo a ser listado: ");
+ scanf("%d",&ngrupo);
+ system("cls");
  for(i=0;i<nc;i++)
-    { printf("opcao %d Grupo:%d",ngrupo,c[i].grupo);
-      system("pause");
+    {
       if(ngrupo==c[i].grupo)
         {
          printDados(&c[i]);
         }
     }
-
-
+             printf("\n");
+          system("pause");
 }
 
 void listarTodosContatos(AGENDA *c, int nc)
@@ -259,14 +255,13 @@ void lerNome(AGENDA *c)
     setbuf(stdin, NULL); // Limpar a stream antes de pegar os dados.
     fgets(&c->contato, tamNome, stdin);
     strtok(&c->contato, "\n");//limpando o '\n'
-
 }
 
 void lerTelefone(AGENDA *c)
 {
     system("cls");
     printf("Telefone:");
-    setbuf(stdin, NULL); // Limpar a stream antes de pegar os dados.
+    //setbuf(stdin, NULL); // Limpar a stream antes de pegar os dados.
     fgets(&c->telefone, tamNumero, stdin);
     strtok(&c->telefone, "\n");//limpando o '\n'
  }
@@ -300,7 +295,6 @@ char *nomeGrupo(int ng)
 void printDados(AGENDA *c)
 {
    printf("Nome: %s Telefone: %s Grupo: %s \n", c->contato, c->telefone, nomeGrupo(c->grupo));
-
- }
+}
 
 
